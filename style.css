@@ -1,0 +1,35 @@
+body {
+    margin: 10px;
+    background-image: url('Images/fJrvOK.png');
+    
+
+}
+.display-4{
+    color: white;
+}
+#threejs-container .country {
+    width: 100%;
+    height: 100vh;
+    /* Full height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#globeArea {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    padding-bottom: 100%
+}
+
+.threejs-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#countryDetails {
+    
+   color: white;
+}
