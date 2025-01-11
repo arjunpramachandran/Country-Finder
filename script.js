@@ -1,35 +1,50 @@
 document.addEventListener('DOMContentLoaded', (event) => {
   const form = document.getElementById('country-form');
+  form.addEventListener('keyup', suggestCountry)
+  async function suggestCountry() {
+    const input = document.getElementById('country').value.toLowerCase();
+    const response = await fetch(`https://restcountries.com/v3.1/all`);
+    const countries = await response.json();
+    let suggestions = countries.map(country => country.name.common).filter(name => name.toLowerCase().startsWith(input));
+    const suggestionsDiv = document.getElementById('suggestions');
+    suggestionsDiv.innerHTML = suggestions.length
+      ? suggestions.map(name => `<div onclick="selectSuggestion('${name}')">${name}</div>`).join('')
+      : 'No Suggetion Found'
+  }
+  window.selectSuggestion = function (name) {
+    document.getElementById('country').value = name;
+    document.getElementById('suggestions').innerHTML = '';
+    fetchData(name)
+    console.log(name);
+  }
+
+
   form.addEventListener('submit', (event) => {
-  event.preventDefault(); // Prevent form submission
-  const countryInput = document.getElementById('country').value;
-  const countryDetailsDiv = document.getElementById('countryDetails');
-  fetchData(countryInput, countryDetailsDiv)
-});
-// Fetch country data
-const fetchData = async (countryInput, countryDetailsDiv) => {
-  try {
-    const response = await fetch(`https://restcountries.com/v3.1/name/${countryInput}`)
-    if (!response.ok) throw new Error("Data Not Found")
-    const data = await response.json()
-    displayData(data, countryDetailsDiv)
+    event.preventDefault();
+    const countryInput = document.getElementById('country').value;
+    fetchData(countryInput)
+  });
+  // Fetch country data
+  const fetchData = async (countryInput) => {
+    try {
+      const response = await fetch(`https://restcountries.com/v3.1/name/${countryInput}?fullText=true`)
+      if (!response.ok) throw new Error("Data Not Found")
+      const data = await response.json()
+      displayData(data)
+    }
+    catch (error) {
+      console.error('Error fetching country data:', error);
+      document.getElementById('countryDetails').innerHTML = '<p>Country not found.</p>';
+    }
   }
-  catch (error) {
-    console.error('Error fetching country data:', error);
-    countryDetailsDiv.innerHTML = '<p>Country not found.</p>';
-  }
-}
 
-const displayData = (data, countryDetailsDiv) => {
-  const country = data[0];
+  const displayData = (data) => {
+    const country = data[0];
 
-
-
-
-  //display data
-  countryDetailsDiv.innerHTML = `
+    //display data
+    document.getElementById('countryDetails').innerHTML = `
        <div class="card" style="width: 18rem;">
-        <canvas id="flagCanvas" width="1000px" height="600px" class="p-2 card-img-top"></canvas>
+        <img src=${country.flags.svg} class="p-2 card-img-top"></canvas>
           <div class="card-body">
               <h5 class="display-6 card-title text-center fw-bold">${country.name.common.toUpperCase()}</h5>
               <p><strong>Capital:</strong> ${country.capital}</p>
@@ -38,33 +53,8 @@ const displayData = (data, countryDetailsDiv) => {
           </div>
         </div>`
 
-  //flag effect 
-  const canvas = document.getElementById('flagCanvas');
-  const ctx = canvas.getContext('2d');
-  const image = new Image();
-  image.src = `${country.flags.svg}`; // Replace with the path to your image
 
-  image.onload = function () {
-    const width = canvas.width;
-    const height = canvas.height;
-    const frequency = 0.02;
-    const amplitude = 20;
-    let time = 0;
-
-    function draw() {
-      ctx.clearRect(0, 0, width, height);
-      for (let y = 0; y < height; y++) {
-        let offset = Math.sin((y + time) * frequency) * amplitude; 
-        ctx.drawImage(image, offset, y, width, 1, 0, y, width, 1);
-      
-      }
-      time += 1;
-      requestAnimationFrame(draw);
-    }
-
-    draw();
   };
-};
 
 });
 
@@ -165,8 +155,5 @@ window.addEventListener('resize', () => {
   camera.updateProjectionMatrix();
   renderer.setSize(size, size);
 });
-
-
-
 
 

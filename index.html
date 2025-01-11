@@ -12,21 +12,22 @@
 </head>
 
 <body>
-    <div class="container">
+    <div class="container ">
         <h1 class="display-4 text-center p-4">Country Finder</h1>
-        <div class="row">
-            <div class="col-6">
-                <div class="row">
+        <div class="row ">
+            <div class="col-6  ">
+                <div class="row ">
                     <form id="country-form">
                         <div class="input-group mb-3">
-                            <input id="country" type="text" class="form-control" placeholder="Search Country...">
+                            <input onkeyup="suggestCountry()" id="country" type="text" class="form-control" placeholder="Search Country...">
                             <button class="btn btn-outline-secondary" id="button-addon" type="submit">
                                 <i class="fa fa-search" aria-hidden="true"></i>
                             </button>
                         </div>
+                        <div id="suggestions"></div>
                     </form>
                 </div>
-                <div class="row country">
+                <div class="row country ">
                     <div id="countryDetails">
                 
                     </div>

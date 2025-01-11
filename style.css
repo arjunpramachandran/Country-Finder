@@ -31,5 +31,14 @@ body {
 
 #countryDetails {
     
+   color: rgb(247, 6, 6);
+}
+
+#suggestions div {
    color: white;
+    padding: 8px;
+    cursor: pointer;
+}
+#suggestions div:hover {
+    background-color: #f0f0f034;
 }
